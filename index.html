@@ -1,0 +1,1674 @@
+```html
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0c10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>İyi Geceler Mesaj Üretici PRO</title>
+
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --card: #12141b;
+      --text: #e8e8ea;
+      --muted: #a7a7b0;
+      --border: rgba(255,255,255,.10);
+      --accent: #7aa2ff;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --danger: #fb7185;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+      --radius2: 12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+      /* iOS / Safari native form UI için önemli */
+      color-scheme: dark;
+    }
+    [data-theme="light"]{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#14151a;
+      --muted:#5a5d6b;
+      --border:rgba(0,0,0,.10);
+      --shadow: 0 12px 28px rgba(10,12,20,.10);
+      --accent:#315efb;
+
+      color-scheme: light;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 800px at 20% -20%, rgba(122,162,255,.25), transparent 60%),
+                  radial-gradient(1200px 800px at 120% 0%, rgba(251,113,133,.20), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    h1{
+      margin:0;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: .2px;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      user-select:none;
+      box-shadow: none;
+    }
+    [data-theme="light"] .chip{ background: rgba(0,0,0,.03); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media(min-width: 980px){
+      .grid{ grid-template-columns: 1fr 1fr; align-items:start; }
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media(min-width: 560px){
+      .row.two{ grid-template-columns: 1fr 1fr; }
+      .row.three{ grid-template-columns: 1fr 1fr 1fr; }
+    }
+    label{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input[type="text"], input[type="date"], input[type="time"], select, textarea{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      -webkit-text-fill-color: var(--text);
+    }
+    [data-theme="light"] input[type="text"],
+    [data-theme="light"] input[type="date"],
+    [data-theme="light"] input[type="time"],
+    [data-theme="light"] select,
+    [data-theme="light"] textarea{
+      background: rgba(0,0,0,.03);
+      -webkit-text-fill-color: var(--text);
+    }
+
+    /* ✅ iOS / Safari dropdown okunurluğu */
+    select { color: var(--text); }
+    select option{
+      background-color:#ffffff;
+      color:#14151a;
+    }
+    @supports (color-scheme: dark) {
+      select option{
+        background-color: var(--card);
+        color: var(--text);
+      }
+    }
+
+    /* Placeholder’lar daha okunur */
+    input::placeholder, textarea::placeholder{
+      color: rgba(167,167,176,.85);
+    }
+    [data-theme="light"] input::placeholder,
+    [data-theme="light"] textarea::placeholder{
+      color: rgba(90,93,107,.75);
+    }
+
+    textarea{
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+    .small{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+      margin-top: 6px;
+    }
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 10px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      user-select:none;
+      cursor:pointer;
+    }
+    [data-theme="light"] .toggle{ background: rgba(0,0,0,.03); }
+    .toggle input{ accent-color: var(--accent); width: 18px; height: 18px; }
+    .btns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 8px;
+    }
+    button{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size: 13px;
+    }
+    [data-theme="light"] button{ background: rgba(0,0,0,.03); }
+    button.primary{
+      border-color: rgba(122,162,255,.35);
+      background: rgba(122,162,255,.15);
+    }
+    button.ok{
+      border-color: rgba(74,222,128,.35);
+      background: rgba(74,222,128,.12);
+    }
+    button.warn{
+      border-color: rgba(251,191,36,.35);
+      background: rgba(251,191,36,.12);
+    }
+    button.danger{
+      border-color: rgba(251,113,133,.35);
+      background: rgba(251,113,133,.12);
+    }
+    .hr{ height:1px; background: var(--border); margin: 12px 0; }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .rangeWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 10px 12px;
+      background: rgba(255,255,255,.03);
+    }
+    [data-theme="light"] .rangeWrap{ background: rgba(0,0,0,.03); }
+    input[type="range"]{ width:100%; }
+    .value{
+      font-family: var(--mono);
+      color: var(--text);
+      font-size: 12px;
+      min-width: 28px;
+      text-align:right;
+    }
+    details{
+      border: 1px dashed var(--border);
+      border-radius: var(--radius2);
+      padding: 10px 10px;
+      background: rgba(255,255,255,.02);
+    }
+    [data-theme="light"] details{ background: rgba(0,0,0,.02); }
+    summary{
+      cursor:pointer;
+      color: var(--text);
+      font-size: 13px;
+      user-select:none;
+    }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .item{
+      border:1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 10px;
+      background: rgba(255,255,255,.03);
+    }
+    [data-theme="light"] .item{ background: rgba(0,0,0,.03); }
+    .item .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .item pre{
+      margin:0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(20,22,28,.92);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      display:none;
+      z-index: 9999;
+      max-width: calc(100vw - 24px);
+      text-align:center;
+    }
+    [data-theme="light"] .toast{
+      background: rgba(10,12,20,.92);
+    }
+
+    .emojiPreview{
+      font-size: 18px;
+      line-height: 1.25;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      word-break: break-word;
+    }
+    [data-theme="light"] .emojiPreview{ background: rgba(0,0,0,.03); }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap" id="app">
+    <header>
+      <div class="title">
+        <h1>İyi Geceler Mesaj Üretici PRO 🌙</h1>
+        <p class="subtitle">
+          Şablon 1–2–3 / Hybrid mesaj + WhatsApp/Telegram paylaş + Emoji paket editörü + Özel gün modu + ICS hatırlatıcı.
+        </p>
+      </div>
+      <div class="top-actions">
+        <button class="chip" id="themeBtn" type="button">🌓 Tema</button>
+        <button class="chip" id="a2hsTipBtn" type="button">📱 Ana ekrana ekle</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Controls -->
+      <section class="card">
+        <h2>Ayarlar</h2>
+
+        <div class="row two">
+          <label>
+            Şablon
+            <select id="templateId">
+              <option value="auto">Auto (uygun olanı seç)</option>
+              <option value="1">Şablon 1 (çiçek-karışık)</option>
+              <option value="2">Şablon 2 (sevgilim/kalp)</option>
+              <option value="3">Şablon 3 (hayatım/dramatik)</option>
+              <option value="hybrid">Hybrid (1+2+3 karışık)</option>
+            </select>
+          </label>
+
+          <label>
+            Uzunluk
+            <select id="length">
+              <option value="short">Kısa (4 satır)</option>
+              <option value="normal" selected>Normal (5 satır)</option>
+              <option value="long">Uzun (6 satır)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row two">
+          <label>
+            Hitap (boş bırakabilirsin)
+            <input id="hitap" type="text" placeholder="örn. Aşkım / Sevgilim / Hayatım" />
+          </label>
+
+          <label>
+            Lakap (boş bırakabilirsin)
+            <input id="lakap" type="text" placeholder="örn. tatlışım / fıstığım / birtanem" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Ek satır (opsiyonel)
+            <input id="extraLine" type="text" placeholder="örn: Yarın da yüzün hep gülsün 🤍" />
+          </label>
+        </div>
+
+        <div class="row three">
+          <label>
+            Emoji teması
+            <select id="emojiTheme">
+              <option value="mixed" selected>Karışık</option>
+              <option value="hearts">Kalp ağırlıklı</option>
+              <option value="flowers">Çiçek ağırlıklı</option>
+            </select>
+          </label>
+
+          <label>
+            Varyasyon sayısı
+            <select id="variationCount">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </label>
+
+          <label>
+            Çıktı formatı
+            <select id="outputFormat">
+              <option value="text" selected>Metin (mesaj)</option>
+              <option value="json">JSON (uygulama)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="rangeWrap">
+            <div class="pill">Emoji yoğunluğu</div>
+            <input id="emojiIntensity" type="range" min="1" max="5" value="5" />
+            <div class="value" id="emojiVal">5</div>
+          </div>
+          <div class="small">1=hafif, 5=ultra (şablonlara en yakın)</div>
+        </div>
+
+        <div class="row two">
+          <div class="toggle" id="religiousWrap" role="button" tabindex="0">
+            <input id="religiousMode" type="checkbox" checked />
+            <div>
+              <div style="font-size:13px;color:var(--text)">Dini ifadeler (Allah rahatlık versin / Allah’a emanet...)</div>
+              <div class="small" style="margin:0">Kapalı yaparsan daha nötr iyi dilek kullanır.</div>
+            </div>
+          </div>
+
+          <div class="toggle" id="autoCopyWrap" role="button" tabindex="0">
+            <input id="autoCopy" type="checkbox" />
+            <div>
+              <div style="font-size:13px;color:var(--text)">Mesaj üretince otomatik kopyala</div>
+              <div class="small" style="margin:0">Tek tuşla WhatsApp’a yapıştır.</div>
+            </div>
+          </div>
+        </div>
+
+        <details>
+          <summary>Gelişmiş seçenekler</summary>
+          <div class="hr"></div>
+
+          <div class="row three">
+            <label>
+              Uzatma stili
+              <select id="stretchLevel">
+                <option value="0">Yok</option>
+                <option value="1">Az</option>
+                <option value="2" selected>Orta</option>
+                <option value="3">Çok</option>
+              </select>
+            </label>
+
+            <label>
+              Kapanış biçimi
+              <select id="closingStyle">
+                <option value="classic" selected>Klasik</option>
+                <option value="short">Kısa</option>
+                <option value="extraKiss">Daha öpücük</option>
+              </select>
+            </label>
+
+            <label>
+              Hybrid ağırlık
+              <select id="hybridWeight">
+                <option value="balanced" selected>Dengeli</option>
+                <option value="mostly1">Şablon 1 ağırlıklı</option>
+                <option value="mostly2">Şablon 2 ağırlıklı</option>
+                <option value="mostly3">Şablon 3 ağırlıklı</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              Kaçın (opsiyonel) — virgülle ayır
+              <input id="avoidWords" type="text" placeholder="örn: birtanem, fıstığım" />
+            </label>
+            <div class="small">Bu kelimeleri mümkün olduğunca değiştirmeye çalışır (tam garanti değil).</div>
+          </div>
+
+          <div class="row">
+            <div class="toggle" id="useCustomEmojiWrap" role="button" tabindex="0">
+              <input id="useCustomEmoji" type="checkbox" />
+              <div>
+                <div style="font-size:13px;color:var(--text)">Kendi emoji paketimi kullan</div>
+                <div class="small" style="margin:0">Aşağıdaki listeleri kaydedersen geçerli olur.</div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>Emoji Paketim 🎛️</summary>
+          <div class="hr"></div>
+
+          <div class="small">
+            Emoji girişini <span class="kbd">boşlukla</span> ayırman en sağlıklısı.
+            (Örn: <span class="kbd">❤️‍🔥 ❤️ 💙 💚 🤍</span>)
+          </div>
+
+          <div class="row two">
+            <label>
+              Kalpler
+              <textarea id="emojiHearts" style="min-height:90px"></textarea>
+            </label>
+            <label>
+              Çiçekler
+              <textarea id="emojiFlowers" style="min-height:90px"></textarea>
+            </label>
+          </div>
+
+          <div class="row two">
+            <label>
+              Öpücük
+              <textarea id="emojiKiss" style="min-height:90px"></textarea>
+            </label>
+            <label>
+              Uyku
+              <textarea id="emojiSleep" style="min-height:90px"></textarea>
+            </label>
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="small" style="margin:0 0 6px">Önizleme</div>
+              <div class="emojiPreview" id="emojiPreview"></div>
+            </div>
+          </div>
+
+          <div class="btns">
+            <button class="ok" id="saveEmojiPackBtn" type="button">💾 Emoji paketini kaydet</button>
+            <button class="danger" id="resetEmojiPackBtn" type="button">↩️ Varsayılana sıfırla</button>
+          </div>
+        </details>
+
+        <details>
+          <summary>Özel Gün Modu 📅</summary>
+          <div class="hr"></div>
+
+          <div class="row">
+            <div class="toggle" id="specialModeWrap" role="button" tabindex="0">
+              <input id="specialMode" type="checkbox" />
+              <div>
+                <div style="font-size:13px;color:var(--text)">Özel gün satırı ekle</div>
+                <div class="small" style="margin:0">Doğum günü / yıl dönümü / sınav / yolculuk / şifa / custom.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row two">
+            <label>
+              Özel gün türü
+              <select id="specialOccasion">
+                <option value="birthday">Doğum günü</option>
+                <option value="anniversary">Yıl dönümü</option>
+                <option value="exam">Sınav / önemli gün</option>
+                <option value="travel">Yolculuk</option>
+                <option value="health">Şifa / iyi olma</option>
+                <option value="custom">Custom (kendin yaz)</option>
+              </select>
+            </label>
+
+            <label>
+              Custom metin (sadece custom seçilirse)
+              <input id="specialCustomText" type="text" placeholder="örn: Yarın toplantın var, rahat uyu" />
+            </label>
+          </div>
+
+          <div class="row two">
+            <label>
+              Özel gün tarihi
+              <input id="specialDate" type="date" />
+            </label>
+            <label>
+              Hatırlatıcı saati (ICS)
+              <input id="specialTime" type="time" />
+            </label>
+          </div>
+
+          <div class="row">
+            <div class="toggle" id="specialAppendWrap" role="button" tabindex="0">
+              <input id="specialAppend" type="checkbox" checked />
+              <div>
+                <div style="font-size:13px;color:var(--text)">Ek satır varsa, özel gün satırını ayrıca ekle</div>
+                <div class="small" style="margin:0">Kapalıysa ekstra satırın sonuna ekler.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btns">
+            <button id="previewSpecialBtn" type="button">👀 Özel gün satırını gör</button>
+            <button class="warn" id="downloadIcsBtn" type="button">📎 ICS hatırlatıcı indir</button>
+          </div>
+
+          <div class="small">ICS: Takvime “hatırlatma” ekler; mesajı otomatik göndermez.</div>
+        </details>
+
+        <div class="btns">
+          <button class="primary" id="genMsgBtn" type="button">✨ Mesaj Oluştur</button>
+          <button class="warn" id="genPromptBtn" type="button">🧠 Prompt Oluştur</button>
+          <button class="ok" id="copyMsgBtn" type="button">📋 Mesajı Kopyala</button>
+          <button id="shareMsgBtn" type="button">📤 Genel Paylaş</button>
+          <button class="danger" id="clearBtn" type="button">🧹 Temizle</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Hızlı Paylaş</h2>
+        <div class="btns">
+          <button id="waBtn" type="button">🟢 WhatsApp</button>
+          <button id="tgBtn" type="button">🔵 Telegram</button>
+          <button id="smsBtn" type="button">💬 SMS</button>
+        </div>
+
+        <div class="small">Not: WhatsApp/Telegram butonları satır sonlarını koruyarak gönderir.</div>
+      </section>
+
+      <!-- Output -->
+      <section class="card">
+        <h2>Çıktı</h2>
+
+        <label>
+          Üretilen Mesaj
+          <textarea id="messageOut" placeholder="Mesaj burada görünecek..."></textarea>
+        </label>
+
+        <div class="btns">
+          <button class="ok" id="saveFavBtn" type="button">⭐ Favorilere Kaydet</button>
+          <button id="copyPromptBtn" type="button">📋 Promptu Kopyala</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <label>
+          ChatGPT / API için Prompt (Formdan doldurulmuş)
+          <textarea id="promptOut" style="min-height:190px;font-family:var(--mono)" placeholder="Prompt burada görünecek..."></textarea>
+        </label>
+
+        <div class="small">JSON formatı seçersen, çıktıyı uygulamada direkt parse edebilirsin.</div>
+      </section>
+
+      <!-- History / Favorites -->
+      <section class="card">
+        <h2>Geçmiş</h2>
+        <div class="small">Son üretilen mesajlar (cihazında saklanır).</div>
+        <div class="list" id="historyList"></div>
+
+        <!-- ✅ Yeni: Geçmişi temizle -->
+        <div class="btns">
+          <button class="danger" id="clearHistoryBtn" type="button">🧾 Geçmişi Sil</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Favoriler</h2>
+        <div class="small">Beğendiklerini sakla, tek tıkla kopyala.</div>
+        <div class="list" id="favList"></div>
+        <div class="btns">
+          <button class="danger" id="clearFavBtn" type="button">🗑️ Favorileri Sil</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  // ---------------- Theme ----------------
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const a2hsTipBtn = document.getElementById('a2hsTipBtn');
+
+  function getSavedTheme(){
+    return localStorage.getItem('ig_theme') || '';
+  }
+  function setTheme(mode){
+    if(mode){
+      root.setAttribute('data-theme', mode);
+      localStorage.setItem('ig_theme', mode);
+
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if(meta) meta.setAttribute('content', mode === 'light' ? '#f6f7fb' : '#0b0c10');
+    }else{
+      root.removeAttribute('data-theme');
+      localStorage.removeItem('ig_theme');
+    }
+  }
+  function toggleTheme(){
+    const current = root.getAttribute('data-theme');
+    if(current === 'light') setTheme('dark');
+    else setTheme('light');
+  }
+  const savedTheme = getSavedTheme();
+  if(savedTheme) setTheme(savedTheme);
+
+  themeBtn.addEventListener('click', toggleTheme);
+  a2hsTipBtn.addEventListener('click', ()=> toast('Safari: Paylaş → Ana Ekrana Ekle 📱'));
+
+  // ---------------- Toast ----------------
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> toastEl.style.display = 'none', 1700);
+  }
+
+  // ---------------- Clipboard (fallback) ----------------
+  async function copyToClipboard(text){
+    const t = (text || '').toString();
+    if(!t.trim()) return false;
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(t);
+        return true;
+      }
+    }catch(e){}
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = t;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){
+      return false;
+    }
+  }
+
+  // ---------------- Inputs ----------------
+  const templateIdEl = document.getElementById('templateId');
+  const lengthEl = document.getElementById('length');
+  const hitapEl = document.getElementById('hitap');
+  const lakapEl = document.getElementById('lakap');
+  const extraLineEl = document.getElementById('extraLine');
+  const emojiThemeEl = document.getElementById('emojiTheme');
+  const emojiIntensityEl = document.getElementById('emojiIntensity');
+  const emojiValEl = document.getElementById('emojiVal');
+  const religiousModeEl = document.getElementById('religiousMode');
+  const outputFormatEl = document.getElementById('outputFormat');
+  const variationCountEl = document.getElementById('variationCount');
+
+  const stretchLevelEl = document.getElementById('stretchLevel');
+  const closingStyleEl = document.getElementById('closingStyle');
+  const avoidWordsEl = document.getElementById('avoidWords');
+  const hybridWeightEl = document.getElementById('hybridWeight');
+
+  const autoCopyEl = document.getElementById('autoCopy');
+
+  // Emoji pack UI
+  const useCustomEmojiEl = document.getElementById('useCustomEmoji');
+  const emojiHeartsEl = document.getElementById('emojiHearts');
+  const emojiFlowersEl = document.getElementById('emojiFlowers');
+  const emojiKissEl = document.getElementById('emojiKiss');
+  const emojiSleepEl = document.getElementById('emojiSleep');
+  const emojiPreviewEl = document.getElementById('emojiPreview');
+  const saveEmojiPackBtn = document.getElementById('saveEmojiPackBtn');
+  const resetEmojiPackBtn = document.getElementById('resetEmojiPackBtn');
+
+  // Special day UI
+  const specialModeEl = document.getElementById('specialMode');
+  const specialOccasionEl = document.getElementById('specialOccasion');
+  const specialCustomTextEl = document.getElementById('specialCustomText');
+  const specialDateEl = document.getElementById('specialDate');
+  const specialTimeEl = document.getElementById('specialTime');
+  const specialAppendEl = document.getElementById('specialAppend');
+  const previewSpecialBtn = document.getElementById('previewSpecialBtn');
+  const downloadIcsBtn = document.getElementById('downloadIcsBtn');
+
+  const messageOut = document.getElementById('messageOut');
+  const promptOut = document.getElementById('promptOut');
+
+  const genMsgBtn = document.getElementById('genMsgBtn');
+  const genPromptBtn = document.getElementById('genPromptBtn');
+  const copyMsgBtn = document.getElementById('copyMsgBtn');
+  const copyPromptBtn = document.getElementById('copyPromptBtn');
+  const shareMsgBtn = document.getElementById('shareMsgBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  const waBtn = document.getElementById('waBtn');
+  const tgBtn = document.getElementById('tgBtn');
+  const smsBtn = document.getElementById('smsBtn');
+
+  const saveFavBtn = document.getElementById('saveFavBtn');
+  const historyList = document.getElementById('historyList');
+  const favList = document.getElementById('favList');
+  const clearFavBtn = document.getElementById('clearFavBtn');
+
+  // ✅ Yeni: geçmişi temizle butonu
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+
+  // Clickable toggles
+  function makeWrapClickable(wrapId, checkboxId){
+    const wrap = document.getElementById(wrapId);
+    const cb = document.getElementById(checkboxId);
+    wrap.addEventListener('click', (e)=>{
+      if(e.target.tagName.toLowerCase() === 'input') return;
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change'));
+    });
+  }
+  makeWrapClickable('religiousWrap','religiousMode');
+  makeWrapClickable('autoCopyWrap','autoCopy');
+  makeWrapClickable('useCustomEmojiWrap','useCustomEmoji');
+  makeWrapClickable('specialModeWrap','specialMode');
+  makeWrapClickable('specialAppendWrap','specialAppend');
+
+  emojiIntensityEl.addEventListener('input', ()=> {
+    emojiValEl.textContent = emojiIntensityEl.value;
+  });
+
+  // ---------------- Helpers ----------------
+  const rand = (n)=> Math.floor(Math.random()*n);
+  const pick = (arr)=> arr[rand(arr.length)];
+  const clamp = (x,a,b)=> Math.max(a, Math.min(b,x));
+
+  function normalizeAvoid(){
+    return (avoidWordsEl.value || '')
+      .split(',')
+      .map(s=>s.trim().toLowerCase())
+      .filter(Boolean);
+  }
+  function avoidWord(text, avoidList){
+    if(!avoidList.length) return text;
+    let t = text;
+    for(const w of avoidList){
+      const re = new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+      t = t.replace(re, '');
+    }
+    return t.replace(/\s{2,}/g,' ').trim();
+  }
+
+  function stretch(word, level){
+    if(level <= 0) return word;
+    const map = {
+      "çok": ["çooook", "çoooookk", "çoooooook"],
+      "seviyorum": ["seviyorumm", "seviyyorrumm", "sevviyorum"],
+      "öpüyorum": ["öpüyorumm", "öpüyorummm", "öpüyorrumm"],
+      "ve": ["veee", "veeee", "veeeee"]
+    };
+    const w = word.toLowerCase();
+    if(map[w]){
+      return map[w][clamp(level-1, 0, map[w].length-1)];
+    }
+    if(level >= 2 && word.length >= 3){
+      return word + (level===2 ? word.slice(-1) : word.slice(-1) + word.slice(-1));
+    }
+    return word;
+  }
+
+  // -------- Emoji pack --------
+  const LS_EMOJI_PACK = 'ig_emoji_pack_v1';
+  const LS_USE_CUSTOM_EMOJI = 'ig_use_custom_emoji_v1';
+
+  const DEFAULT_EMOJI_PACK = {
+    hearts: ["❤️","💚","💙","💜","🖤","🤍","❤️‍🔥","💛","🩷","🧡","♥️"],
+    flowers: ["🌺","🌸","🌼","🌹","🍀"],
+    kiss: ["😘"],
+    sleep: ["💤","😴"]
+  };
+
+  function graphemeSplit(str){
+    const s = (str || '').trim();
+    if(!s) return [];
+    if(/[,\s]/.test(s)){
+      return s.split(/[\s,]+/).map(x=>x.trim()).filter(Boolean);
+    }
+    if(window.Intl && Intl.Segmenter){
+      const seg = new Intl.Segmenter('tr', { granularity: 'grapheme' });
+      return Array.from(seg.segment(s), x => x.segment).map(x=>x.trim()).filter(Boolean);
+    }
+    return Array.from(s).map(x=>x.trim()).filter(Boolean);
+  }
+
+  function loadEmojiPack(){
+    try{
+      const raw = localStorage.getItem(LS_EMOJI_PACK);
+      if(!raw) return structuredClone(DEFAULT_EMOJI_PACK);
+      const p = JSON.parse(raw);
+      return {
+        hearts: Array.isArray(p.hearts) && p.hearts.length ? p.hearts : structuredClone(DEFAULT_EMOJI_PACK.hearts),
+        flowers: Array.isArray(p.flowers) && p.flowers.length ? p.flowers : structuredClone(DEFAULT_EMOJI_PACK.flowers),
+        kiss: Array.isArray(p.kiss) && p.kiss.length ? p.kiss : structuredClone(DEFAULT_EMOJI_PACK.kiss),
+        sleep: Array.isArray(p.sleep) && p.sleep.length ? p.sleep : structuredClone(DEFAULT_EMOJI_PACK.sleep)
+      };
+    }catch(e){
+      return structuredClone(DEFAULT_EMOJI_PACK);
+    }
+  }
+
+  function saveEmojiPack(pack){
+    localStorage.setItem(LS_EMOJI_PACK, JSON.stringify(pack));
+  }
+
+  function isCustomEmojiEnabled(){
+    return localStorage.getItem(LS_USE_CUSTOM_EMOJI) === '1';
+  }
+
+  function setCustomEmojiEnabled(on){
+    localStorage.setItem(LS_USE_CUSTOM_EMOJI, on ? '1' : '0');
+  }
+
+  function getActiveEmojiPack(){
+    const useCustom = useCustomEmojiEl.checked && isCustomEmojiEnabled();
+    if(useCustom){
+      return loadEmojiPack();
+    }
+    return structuredClone(DEFAULT_EMOJI_PACK);
+  }
+
+  function buildEmoji(theme, intensity, opts={}){
+    const { includeSleep=true, includeKiss=true } = opts;
+    const pack = getActiveEmojiPack();
+
+    let pool = [];
+    if(theme === 'hearts') pool = pack.hearts.slice();
+    else if(theme === 'flowers') pool = pack.flowers.slice();
+    else pool = pack.hearts.concat(pack.flowers);
+
+    if(includeKiss) pool = pool.concat(pack.kiss);
+    if(includeSleep) pool = pool.concat(pack.sleep);
+
+    const ranges = {
+      1: [6,12],
+      2: [10,18],
+      3: [16,28],
+      4: [24,40],
+      5: [35,60]
+    };
+    const [a,b] = ranges[intensity] || ranges[3];
+    const count = a + rand(b-a+1);
+
+    let out = [];
+    for(let i=0;i<count;i++) out.push(pick(pool));
+    for(let i=5;i<out.length;i++){
+      const slice = out.slice(i-5,i+1);
+      if(slice.every(x=>x===slice[0])) out[i] = pick(pool);
+    }
+    return out.join('');
+  }
+
+  function updateEmojiEditorUI(){
+    const stored = loadEmojiPack();
+    emojiHeartsEl.value = stored.hearts.join(' ');
+    emojiFlowersEl.value = stored.flowers.join(' ');
+    emojiKissEl.value = stored.kiss.join(' ');
+    emojiSleepEl.value = stored.sleep.join(' ');
+    useCustomEmojiEl.checked = isCustomEmojiEnabled();
+
+    const preview = stored.hearts.slice(0,8).join(' ') + "  " +
+                    stored.flowers.slice(0,5).join(' ') + "  " +
+                    stored.kiss.slice(0,3).join(' ') + "  " +
+                    stored.sleep.slice(0,3).join(' ');
+    emojiPreviewEl.textContent = preview.trim();
+  }
+
+  useCustomEmojiEl.addEventListener('change', ()=>{
+    setCustomEmojiEnabled(!!useCustomEmojiEl.checked);
+    toast(useCustomEmojiEl.checked ? 'Kendi emoji paketin aktif ✅' : 'Varsayılan emoji paketi ✅');
+  });
+
+  saveEmojiPackBtn.addEventListener('click', ()=>{
+    const pack = {
+      hearts: graphemeSplit(emojiHeartsEl.value),
+      flowers: graphemeSplit(emojiFlowersEl.value),
+      kiss: graphemeSplit(emojiKissEl.value),
+      sleep: graphemeSplit(emojiSleepEl.value)
+    };
+    if(!pack.hearts.length) pack.hearts = structuredClone(DEFAULT_EMOJI_PACK.hearts);
+    if(!pack.flowers.length) pack.flowers = structuredClone(DEFAULT_EMOJI_PACK.flowers);
+    if(!pack.kiss.length) pack.kiss = structuredClone(DEFAULT_EMOJI_PACK.kiss);
+    if(!pack.sleep.length) pack.sleep = structuredClone(DEFAULT_EMOJI_PACK.sleep);
+
+    saveEmojiPack(pack);
+    setCustomEmojiEnabled(true);
+    useCustomEmojiEl.checked = true;
+    updateEmojiEditorUI();
+    toast('Emoji paketin kaydedildi 💾');
+  });
+
+  resetEmojiPackBtn.addEventListener('click', ()=>{
+    localStorage.removeItem(LS_EMOJI_PACK);
+    setCustomEmojiEnabled(false);
+    useCustomEmojiEl.checked = false;
+    updateEmojiEditorUI();
+    toast('Varsayılan emojiye döndü ↩️');
+  });
+
+  function liveEmojiPreview(){
+    const pack = {
+      hearts: graphemeSplit(emojiHeartsEl.value),
+      flowers: graphemeSplit(emojiFlowersEl.value),
+      kiss: graphemeSplit(emojiKissEl.value),
+      sleep: graphemeSplit(emojiSleepEl.value)
+    };
+    const preview = (pack.hearts.slice(0,10).join(' ') + "  " +
+                    pack.flowers.slice(0,6).join(' ') + "  " +
+                    pack.kiss.slice(0,4).join(' ') + "  " +
+                    pack.sleep.slice(0,4).join(' ')).trim();
+    emojiPreviewEl.textContent = preview || "Önizleme burada görünecek…";
+  }
+  [emojiHeartsEl, emojiFlowersEl, emojiKissEl, emojiSleepEl].forEach(el=>{
+    el.addEventListener('input', liveEmojiPreview);
+  });
+
+  // ---------------- Template banks ----------------
+  const BANK = {
+    hitap: ["Aşkım","Sevgilim","Hayatım","Canım","Birtanem","Aşkımm","Canımın içi"],
+    lakap: ["tatlışım","fıstığım","birtanem","güzelim","canım","balım","minnoşum"],
+
+    line1_t1: [
+      "Aşkıma iyi geceler iyi uykular diliyorum",
+      "Aşkım iyi geceler, iyi uykular diliyorum",
+      "Aşkıma iyi geceler, güzel uykular"
+    ],
+    line1_t2: [
+      "Aşkıma sevgilime iyi geceler iyi uykular diliyorum",
+      "Aşkıma, sevgilime iyi geceler iyi uykular",
+      "Sevgilime iyi geceler, iyi uykular diliyorum"
+    ],
+    line1_t3: [
+      "İyi geceler iyi uykular hayatım",
+      "İyi geceler, iyi uykular canım",
+      "İyi geceler iyi uykular birtanem"
+    ],
+
+    line2_rel: ["Allah rahatlık versin","Rabbim rahatlık versin","Allah huzur versin"],
+    line2_neutral: ["Rahat bir uyku olsun","Huzurlu uykular","Mis gibi bir uyku diliyorum"],
+
+    line3_t1: [
+      "Güzel tatlı rüyalar görsün {lakap}",
+      "Tatlı rüyalar görsün {lakap}",
+      "Güzel rüyalar görsün {lakap}"
+    ],
+    line3_t2: [
+      "Güzel güzel rüyalar görsün {lakap}",
+      "Mis gibi rüyalar görsün {lakap}",
+      "Güzel rüyalar görsün {lakap}"
+    ],
+    line3_t3: [
+      "Canımın cananına güzel uykular diliyorum",
+      "{lakap} güzel rüyalar görsün",
+      "Güzel rüyalar seninle olsun {lakap}"
+    ],
+
+    love_t1: [
+      "Seni {cok} {seviyorum} ve {cok} {opuyorum}",
+      "Seni {cok} {seviyorum} {ve} {cok} {opuyorum}"
+    ],
+    love_t2: [
+      "Aşkımı {cok} {seviyorum} ve {cok} {opuyorum}",
+      "Aşkımııı {cok} {seviyorum} {ve} {cok} {opuyorum}"
+    ],
+    love_t3: [
+      "Birtanemi {cok} {seviyorum} {ve} {cok} {opuyorum}",
+      "Canımı {cok} {seviyorum} {ve} {cok} {opuyorum}"
+    ],
+
+    close_rel: ["Allah’a emanet olun","Allah’a emanet ol","Allah’a emanet"],
+    close_neutral: ["İyi geceler","Güzel uykular","Yarın görüşürüz"]
+  };
+
+  function chooseTemplateAuto(hitap, lakap){
+    const h = (hitap||'').toLowerCase();
+    const l = (lakap||'').toLowerCase();
+    if(h.includes('sevgil') || l.includes('fıst')) return 2;
+    if(h.includes('hayat') || l.includes('canan')) return 3;
+    return 1;
+  }
+
+  function chooseHybridTemplate(weight){
+    const r = Math.random();
+    if(weight === 'mostly1'){ if(r < 0.6) return 1; if(r < 0.8) return 2; return 3; }
+    if(weight === 'mostly2'){ if(r < 0.2) return 1; if(r < 0.8) return 2; return 3; }
+    if(weight === 'mostly3'){ if(r < 0.2) return 1; if(r < 0.4) return 2; return 3; }
+    if(r < 1/3) return 1;
+    if(r < 2/3) return 2;
+    return 3;
+  }
+
+  function makeLine(text, theme, intensity, opts){
+    return (text.trim() + " " + buildEmoji(theme, intensity, opts)).trim();
+  }
+
+  // ---------------- Special day line ----------------
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function formatDateInput(d){ return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
+
+  const now = new Date();
+  specialDateEl.value = formatDateInput(now);
+  specialTimeEl.value = specialTimeEl.value || "23:00";
+
+  function daysDiffFromToday(dateStr){
+    if(!dateStr) return null;
+    const [y,m,d] = dateStr.split('-').map(Number);
+    if(!y||!m||!d) return null;
+    const today = new Date();
+    const a = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const b = new Date(y, m-1, d);
+    return Math.round((b.getTime() - a.getTime()) / (1000*60*60*24));
+  }
+
+  function buildSpecialLine(){
+    if(!specialModeEl.checked) return '';
+    const occ = specialOccasionEl.value;
+    const d = specialDateEl.value;
+    const diff = daysDiffFromToday(d);
+    const customText = (specialCustomTextEl.value || '').trim();
+
+    if(occ === 'custom') return customText || "Yarın da güzel geçsin";
+
+    const when =
+      diff === 0 ? "bugün" :
+      diff === 1 ? "yarın" :
+      (diff !== null && diff > 1) ? `${diff} gün sonra` :
+      (diff !== null && diff < 0) ? "geçen gün" : "yakında";
+
+    if(occ === 'birthday'){
+      if(diff === 0) return "Doğum günün kutlu olsun aşkım, iyi ki varsın";
+      if(diff === 1) return "Yarın doğum günün, şimdiden iyi ki doğdun aşkım";
+      return `Doğum günün ${when}… şimdiden kocaman öpücük`;
+    }
+    if(occ === 'anniversary'){
+      if(diff === 0) return "Yıl dönümümüz kutlu olsun aşkım, nice güzel senelere";
+      if(diff === 1) return "Yarın yıl dönümümüz… nice güzel anılara";
+      return `Yıl dönümümüz ${when}… kalbim hep seninle`;
+    }
+    if(occ === 'exam'){
+      if(diff === 0) return "Bugün çok yorulduysan, şimdi güzelce dinlen";
+      if(diff === 1) return "Yarınki önemli günün için kalbin rahat olsun, güzel uyu";
+      return `Önemli günün ${when}… sen yaparsın, içini ferah tut`;
+    }
+    if(occ === 'travel'){
+      if(diff === 1) return "Yarın yolun açık olsun, güzelce dinlen";
+      if(diff === 0) return "Bugün yol yorgunluğunu at, mis gibi uyu";
+      return `Yolculuğun ${when}… her şey su gibi aksın`;
+    }
+    if(occ === 'health'){
+      if(diff === 0) return "Bugün de iyi ol… sabaha daha zinde uyan";
+      return "Şifa olsun, sabaha daha iyi uyan";
+    }
+    return "Yarın da güzel geçsin";
+  }
+
+  previewSpecialBtn.addEventListener('click', ()=>{
+    const line = buildSpecialLine();
+    if(!line){ toast('Özel gün modu kapalı 🙂'); return; }
+    toast(line.length > 40 ? (line.slice(0,40) + "…") : line);
+  });
+
+  // ---------------- ICS ----------------
+  function escapeICS(text){
+    return (text || '')
+      .replace(/\\/g, '\\\\')
+      .replace(/\n/g, '\\n')
+      .replace(/,/g, '\\,')
+      .replace(/;/g, '\\;');
+  }
+  function toICSLocalDateTime(dateObj){
+    const y = dateObj.getFullYear();
+    const m = pad2(dateObj.getMonth()+1);
+    const d = pad2(dateObj.getDate());
+    const hh = pad2(dateObj.getHours());
+    const mm = pad2(dateObj.getMinutes());
+    const ss = pad2(dateObj.getSeconds());
+    return `${y}${m}${d}T${hh}${mm}${ss}`;
+  }
+  function makeUID(){ return 'ig-' + Math.random().toString(16).slice(2) + '-' + Date.now(); }
+
+  function downloadICS(){
+    const dateStr = specialDateEl.value || formatDateInput(new Date());
+    const timeStr = specialTimeEl.value || "23:00";
+    const [y,m,d] = dateStr.split('-').map(Number);
+    const [hh,mm] = timeStr.split(':').map(Number);
+
+    const start = new Date(y, m-1, d, hh || 23, mm || 0, 0);
+    const end = new Date(start.getTime() + 10*60*1000);
+
+    const summary = "İyi geceler mesajı gönder";
+    const msg = (messageOut.value || '').trim();
+    const desc = msg ? ("Mesaj:\\n" + msg.slice(0,900)) : "Hatırlatma: iyi geceler mesajını gönder.";
+
+    const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IyiGeceler//TR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${makeUID()}
+DTSTAMP:${toICSLocalDateTime(new Date())}
+DTSTART:${toICSLocalDateTime(start)}
+DTEND:${toICSLocalDateTime(end)}
+SUMMARY:${escapeICS(summary)}
+DESCRIPTION:${escapeICS(desc)}
+END:VEVENT
+END:VCALENDAR`.replace(/\n/g, "\r\n");
+
+    const blob = new Blob([ics], {type: "text/calendar;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `iyi-geceler-hatirlatici-${dateStr}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast('ICS indirildi 📎');
+  }
+  downloadIcsBtn.addEventListener('click', downloadICS);
+
+  // ---------------- Local generator ----------------
+  function genOneMessage(params){
+    const avoidList = params.avoidList || [];
+    const stretchLevel = params.stretchLevel || 0;
+
+    let templateTag = params.templateId; // auto | 1 | 2 | 3 | hybrid
+    if(templateTag === 'auto') templateTag = String(chooseTemplateAuto(params.hitap, params.lakap));
+
+    const hitap = (params.hitap && params.hitap.trim()) ? params.hitap.trim() : pick(BANK.hitap);
+    const lakap = (params.lakap && params.lakap.trim()) ? params.lakap.trim() : pick(BANK.lakap);
+
+    const theme = params.emojiTheme;
+    const intensity = params.emojiIntensity;
+    const religious = params.religiousMode;
+
+    const specialLine = params.specialMode ? buildSpecialLine() : '';
+    let effectiveExtra = (params.extraLine || '').trim();
+
+    if(specialLine){
+      if(!effectiveExtra){
+        effectiveExtra = specialLine;
+      }else{
+        if(!params.specialAppend){
+          effectiveExtra = (effectiveExtra + " " + specialLine).trim();
+        }
+      }
+    }
+
+    let targetLines = params.length === 'short' ? 4 : (params.length === 'long' ? 6 : 5);
+
+    function banksForTemplate(tn){
+      const line1Bank = tn === 1 ? BANK.line1_t1 : (tn === 2 ? BANK.line1_t2 : BANK.line1_t3);
+      const line3Bank = tn === 1 ? BANK.line3_t1 : (tn === 2 ? BANK.line3_t2 : BANK.line3_t3);
+      const loveBank  = tn === 1 ? BANK.love_t1  : (tn === 2 ? BANK.love_t2  : BANK.love_t3);
+      return { line1Bank, line3Bank, loveBank };
+    }
+
+    let line1Bank, line3Bank, loveBank;
+    if(templateTag === 'hybrid'){
+      const w = params.hybridWeight || 'balanced';
+      const t1 = chooseHybridTemplate(w);
+      const t3 = chooseHybridTemplate(w);
+      const tl = chooseHybridTemplate(w);
+      line1Bank = banksForTemplate(t1).line1Bank;
+      line3Bank = banksForTemplate(t3).line3Bank;
+      loveBank  = banksForTemplate(tl).loveBank;
+    }else{
+      const tn = Number(templateTag);
+      const b = banksForTemplate(tn);
+      line1Bank = b.line1Bank;
+      line3Bank = b.line3Bank;
+      loveBank = b.loveBank;
+    }
+
+    let l1 = pick(line1Bank);
+    if(params.hitap && params.hitap.trim()){
+      const h = params.hitap.trim();
+      if(!l1.toLowerCase().includes(h.toLowerCase())) l1 = (l1 + " " + h).trim();
+    }
+
+    let l2 = religious ? pick(BANK.line2_rel) : pick(BANK.line2_neutral);
+    let l3 = pick(line3Bank).replace('{lakap}', lakap);
+
+    const cok = stretch("çok", stretchLevel || 0);
+    const seviyorum = stretch("seviyorum", stretchLevel || 0);
+    const opuyorum = stretch("öpüyorum", stretchLevel || 0);
+    const ve = stretch("ve", stretchLevel || 0);
+
+    let loveTpl = pick(loveBank);
+    let l4 = loveTpl
+      .replaceAll('{cok}', cok)
+      .replaceAll('{seviyorum}', seviyorum)
+      .replaceAll('{opuyorum}', opuyorum)
+      .replaceAll('{ve}', ve);
+
+    let closing = religious ? pick(BANK.close_rel) : pick(BANK.close_neutral);
+    if(params.closingStyle === 'short') closing = religious ? "Allah’a emanet" : "İyi geceler";
+    if(params.closingStyle === 'extraKiss') closing = closing + " " + "😘😘";
+
+    l1 = avoidWord(l1, avoidList);
+    l2 = avoidWord(l2, avoidList);
+    l3 = avoidWord(l3, avoidList);
+    l4 = avoidWord(l4, avoidList);
+    closing = avoidWord(closing, avoidList);
+
+    const lines = [];
+    lines.push(makeLine(l1, theme, intensity, {includeSleep:false, includeKiss:true}));
+    lines.push(makeLine(l2, theme, clamp(intensity-1,1,5), {includeSleep:false, includeKiss:true}));
+    lines.push(makeLine(l3, theme, intensity, {includeSleep:true, includeKiss:true}));
+
+    if(params.length === 'long'){
+      const extraLongLineOptions = religious
+        ? ["Rabbim seni korusun", "Allah kalbine huzur versin", "Melekler gibi uyu"]
+        : ["Kalbin hep huzurla dolsun", "Gözlerin dinlensin", "Yarın harika olsun"];
+      lines.push(makeLine(pick(extraLongLineOptions), theme, clamp(intensity-1,1,5), {includeSleep:true, includeKiss:true}));
+    }
+
+    lines.push(makeLine(l4, theme, clamp(intensity+1,1,5), {includeSleep:false, includeKiss:true}));
+
+    if(effectiveExtra){
+      lines.push(makeLine(effectiveExtra, theme, clamp(intensity-1,1,5), {includeSleep:true, includeKiss:true}));
+    }
+    if(specialLine && (params.extraLine||'').trim() && params.specialAppend){
+      lines.push(makeLine(specialLine, theme, clamp(intensity-1,1,5), {includeSleep:true, includeKiss:true}));
+    }
+
+    lines.push(makeLine(closing, theme, clamp(intensity-2,1,5), {includeSleep:false, includeKiss:false}));
+
+    while(lines.length > targetLines){
+      const idxToRemove = lines.length - 2;
+      if(idxToRemove > 3) lines.splice(idxToRemove, 1);
+      else break;
+    }
+
+    let templateUsed = (templateTag === 'hybrid') ? 0 : Number(templateTag);
+    return { template_id_used: templateUsed, lines, full_text: lines.join("\n") };
+  }
+
+  // ---------------- Prompt builder ----------------
+  function buildPromptFromForm(){
+    const includeEmojiPack = useCustomEmojiEl.checked && isCustomEmojiEnabled();
+    const emojiPack = includeEmojiPack ? loadEmojiPack() : null;
+
+    const payload = {
+      template_id: templateIdEl.value,
+      hybrid_weight: hybridWeightEl.value,
+      hitap: hitapEl.value || "",
+      lakap: lakapEl.value || "",
+      religious_mode: !!religiousModeEl.checked,
+      emoji_theme: emojiThemeEl.value,
+      emoji_intensity: Number(emojiIntensityEl.value),
+      length: lengthEl.value,
+      extra_line: extraLineEl.value || "",
+      special_mode: !!specialModeEl.checked,
+      special_occasion: specialOccasionEl.value,
+      special_custom_text: specialCustomTextEl.value || "",
+      special_date: specialDateEl.value || "",
+      special_time: specialTimeEl.value || "",
+      special_append: !!specialAppendEl.checked,
+      avoid_words: normalizeAvoid(),
+      output_format: outputFormatEl.value,
+      variation_count: Number(variationCountEl.value),
+      custom_emoji_pack: emojiPack ? emojiPack : undefined
+    };
+    Object.keys(payload).forEach(k=>{ if(payload[k] === undefined) delete payload[k]; });
+
+    const masterPrompt = `
+Sen bir “Romantik İyi Geceler Mesaj Üreticisi”sin. Kullanıcının verdiği 3 örnek şablonun üslubunu ve emoji yoğunluğunu KORUYARAK ama birebir kopyalamadan yeni mesajlar üret.
+
+# Girdi (JSON)
+${JSON.stringify(payload, null, 2)}
+
+# Kurallar
+- 4 ila 6 satır üret (length’e göre).
+- Satırlar yeni satır ile ayrılsın.
+- template_id:
+  - 1: “Aşkıma iyi geceler…” + çiçek-karışık vibe
+  - 2: “Aşkıma Sevgilime…” + kalp ağırlıklı vibe
+  - 3: “İyi geceler iyi uykular hayatım…” + daha dramatik vibe
+  - hybrid: 1+2+3 karışık ama tutarlı, hybrid_weight’e göre ağırlık ayarla
+  - auto: hitap/lakap’a göre en uygunu seç
+- religious_mode true ise mutlaka “Allah rahatlık versin” çizgisinde bir satır ve kapanışta “Allah’a emanet …” benzeri olsun.
+- special_mode true ise special_occasion + special_date’e göre özel gün satırı ekle.
+- emoji_theme ve emoji_intensity’e göre emojileri satır sonlarına yoğun koy.
+- avoid_words varsa mümkün olduğunca kullanma.
+- variation_count kadar farklı varyasyon üret.
+- output_format = "text" ise yalnızca metin; birden fazla varyasyon varsa araya "---VARYASYON---" koy.
+- output_format = "json" ise saf JSON döndür.
+
+Şimdi üret.
+`.trim();
+
+    return { masterPrompt };
+  }
+
+  // ---------------- History / Favorites ----------------
+  const LS_HISTORY = 'ig_history_v1';
+  const LS_FAV = 'ig_fav_v1';
+
+  function loadList(key){
+    try{ return JSON.parse(localStorage.getItem(key) || '[]') || []; }
+    catch(e){ return []; }
+  }
+  function saveList(key, arr){
+    localStorage.setItem(key, JSON.stringify(arr.slice(0, 40)));
+  }
+  function templateLabel(id){
+    if(id === 0) return 'H';
+    return String(id);
+  }
+  function renderList(el, items, type){
+    el.innerHTML = '';
+    if(!items.length){
+      el.innerHTML = `<div class="small">Henüz ${type === 'fav' ? 'favori' : 'geçmiş'} yok.</div>`;
+      return;
+    }
+    items.forEach((it, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'item';
+      const date = new Date(it.ts || Date.now());
+      const metaLeft = `${date.toLocaleString('tr-TR')}`;
+      const metaRight = `Şablon ${templateLabel(it.template_id_used)} • Yoğunluk ${it.emoji_intensity}`;
+      div.innerHTML = `
+        <div class="meta">
+          <span>${metaLeft}</span>
+          <span>${metaRight}</span>
+        </div>
+        <pre>${it.full_text}</pre>
+        <div class="btns" style="margin-top:10px">
+          <button type="button" data-act="copy">📋 Kopyala</button>
+          ${type === 'fav'
+            ? `<button class="danger" type="button" data-act="del">🗑️ Sil</button>`
+            : `<button class="ok" type="button" data-act="fav">⭐ Favorile</button>`}
+        </div>
+      `;
+      div.querySelector('[data-act="copy"]').addEventListener('click', async ()=>{
+        const ok = await copyToClipboard(it.full_text);
+        toast(ok ? 'Kopyalandı ✅' : 'Kopyalama olmadı ❗');
+      });
+
+      if(type === 'fav'){
+        div.querySelector('[data-act="del"]').addEventListener('click', ()=>{
+          const favs = loadList(LS_FAV);
+          favs.splice(idx,1);
+          saveList(LS_FAV, favs);
+          renderAll();
+          toast('Favoriden silindi 🗑️');
+        });
+      }else{
+        div.querySelector('[data-act="fav"]').addEventListener('click', ()=>{
+          const favs = loadList(LS_FAV);
+          favs.unshift(it);
+          saveList(LS_FAV, favs);
+          renderAll();
+          toast('Favorilere eklendi ⭐');
+        });
+      }
+
+      el.appendChild(div);
+    });
+  }
+  function renderAll(){
+    renderList(historyList, loadList(LS_HISTORY), 'history');
+    renderList(favList, loadList(LS_FAV), 'fav');
+  }
+
+  // ---------------- Actions ----------------
+  function currentParams(){
+    return {
+      templateId: templateIdEl.value,
+      length: lengthEl.value,
+      hitap: hitapEl.value,
+      lakap: lakapEl.value,
+      extraLine: extraLineEl.value,
+      emojiTheme: emojiThemeEl.value,
+      emojiIntensity: Number(emojiIntensityEl.value),
+      religiousMode: !!religiousModeEl.checked,
+      variationCount: Number(variationCountEl.value),
+      outputFormat: outputFormatEl.value,
+      stretchLevel: Number(stretchLevelEl.value),
+      closingStyle: closingStyleEl.value,
+      avoidList: normalizeAvoid(),
+      hybridWeight: hybridWeightEl.value,
+      specialMode: !!specialModeEl.checked,
+      specialAppend: !!specialAppendEl.checked
+    };
+  }
+
+  function genPrompt(silent=false){
+    const { masterPrompt } = buildPromptFromForm();
+    promptOut.value = masterPrompt;
+    if(!silent) toast('Prompt hazır 🧠');
+  }
+
+  function genMessage(){
+    const p = currentParams();
+    const variations = [];
+    for(let i=0;i<p.variationCount;i++){
+      variations.push(genOneMessage(p));
+    }
+
+    messageOut.value = variations.map(v=>v.full_text).join("\n---VARYASYON---\n");
+
+    const hist = loadList(LS_HISTORY);
+    variations.forEach(v=>{
+      hist.unshift({
+        ts: Date.now(),
+        template_id_used: v.template_id_used,
+        emoji_intensity: p.emojiIntensity,
+        full_text: v.full_text
+      });
+    });
+    saveList(LS_HISTORY, hist.slice(0, 18));
+    renderAll();
+
+    genPrompt(true);
+    toast('Mesaj üretildi ✨');
+
+    if(autoCopyEl.checked){
+      copyToClipboard(messageOut.value).then(ok=>{
+        toast(ok ? 'Otomatik kopyalandı ✅' : 'Kopyalama olmadı ❗');
+      });
+    }
+  }
+
+  async function copyMessage(){
+    const val = (messageOut.value||'').trim();
+    if(!val){ toast('Önce mesaj üret 🙂'); return; }
+    const ok = await copyToClipboard(val);
+    toast(ok ? 'Mesaj kopyalandı ✅' : 'Kopyalama olmadı ❗');
+  }
+
+  async function copyPrompt(){
+    const val = (promptOut.value||'').trim();
+    if(!val) genPrompt(true);
+    const ok = await copyToClipboard((promptOut.value||'').trim());
+    toast(ok ? 'Prompt kopyalandı ✅' : 'Kopyalama olmadı ❗');
+  }
+
+  async function shareMessage(){
+    const val = (messageOut.value||'').trim();
+    if(!val){ toast('Önce mesaj üret 🙂'); return; }
+    if(navigator.share){
+      try{ await navigator.share({ text: val, title: 'İyi Geceler Mesajı' }); }catch(e){}
+    }else{
+      const ok = await copyToClipboard(val);
+      toast(ok ? 'Paylaşım yok: Kopyalandı ✅' : 'Kopyalama olmadı ❗');
+    }
+  }
+
+  function clearAll(){
+    messageOut.value = '';
+    promptOut.value = '';
+    toast('Temizlendi 🧹');
+  }
+
+  function saveFavorite(){
+    const val = (messageOut.value||'').trim();
+    if(!val){ toast('Önce mesaj üret 🙂'); return; }
+    const p = currentParams();
+    const favs = loadList(LS_FAV);
+
+    let used;
+    if(p.templateId === 'auto') used = chooseTemplateAuto(p.hitap, p.lakap);
+    else if(p.templateId === 'hybrid') used = 0;
+    else used = Number(p.templateId);
+
+    favs.unshift({
+      ts: Date.now(),
+      template_id_used: used,
+      emoji_intensity: p.emojiIntensity,
+      full_text: val
+    });
+    saveList(LS_FAV, favs);
+    renderAll();
+    toast('Favorilere kaydedildi ⭐');
+  }
+
+  // ---------------- Share buttons ----------------
+  function openShareUrl(url){ window.location.href = url; }
+  function getMessageForShare(){ return (messageOut.value||'').trim(); }
+
+  waBtn.addEventListener('click', ()=>{
+    const text = getMessageForShare();
+    if(!text){ toast('Önce mesaj üret 🙂'); return; }
+    openShareUrl(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  });
+
+  tgBtn.addEventListener('click', ()=>{
+    const text = getMessageForShare();
+    if(!text){ toast('Önce mesaj üret 🙂'); return; }
+    openShareUrl(`https://t.me/share/url?text=${encodeURIComponent(text)}`);
+  });
+
+  smsBtn.addEventListener('click', ()=>{
+    const text = getMessageForShare();
+    if(!text){ toast('Önce mesaj üret 🙂'); return; }
+    openShareUrl(`sms:?&body=${encodeURIComponent(text)}`);
+  });
+
+  // ✅ Yeni: Geçmişi temizle
+  clearHistoryBtn.addEventListener('click', ()=>{
+    if(!confirm('Geçmiş tamamen silinsin mi?')) return;
+    localStorage.removeItem(LS_HISTORY);
+    renderAll();
+    toast('Geçmiş temizlendi 🧾');
+  });
+
+  // Favorileri temizle
+  clearFavBtn.addEventListener('click', ()=>{
+    if(!confirm('Favoriler tamamen silinsin mi?')) return;
+    localStorage.removeItem(LS_FAV);
+    renderAll();
+    toast('Favoriler temizlendi 🗑️');
+  });
+
+  // ---------------- Wire ----------------
+  genMsgBtn.addEventListener('click', genMessage);
+  genPromptBtn.addEventListener('click', ()=>genPrompt(false));
+  copyMsgBtn.addEventListener('click', copyMessage);
+  copyPromptBtn.addEventListener('click', copyPrompt);
+  shareMsgBtn.addEventListener('click', shareMessage);
+  clearBtn.addEventListener('click', clearAll);
+  saveFavBtn.addEventListener('click', saveFavorite);
+
+  // Init
+  updateEmojiEditorUI();
+  renderAll();
+  genPrompt(true);
+})();
+</script>
+</body>
+</html>
+```
